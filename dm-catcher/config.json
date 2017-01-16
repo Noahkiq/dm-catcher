@@ -1,0 +1,7 @@
+{
+  "token":"Token",
+  "alertChannels":{
+    "Server ID":"Channel ID"
+  },
+  "ownerId":"Your ID"
+}
