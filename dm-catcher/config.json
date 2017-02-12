@@ -1,6 +1,9 @@
 {
-  "token":"Token",
-  "alertChannels":{
-    "Server ID":"Channel ID"
-  }
+  "token1":"token",
+  "token2":"",
+  "token3":"",
+  "alertGuild":"server-id",
+  "alertChannel":"channel-id",
+  "altGuild":"server-id",
+  "altChannel":"channel-id"
 }

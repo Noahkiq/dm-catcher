@@ -10,22 +10,27 @@ namespace dmcatcher
 {
 	class dmcatcher
 	{
-		static void Main(string[] args) => new dmcatcher().Start();
+		static void Main(string[] args) => new dmcatcher().bot1();
+		static void Alt(string[] args) => new dmcatcher().bot2();
+		static void Alt2(string[] args) => new dmcatcher().bot3();
 
-		private DiscordClient _client;
+		string currentDir = Directory.GetCurrentDirectory();
+		string configJson = File.ReadAllText(currentDir + "/config.json");
+		dynamic data = JObject.Parse(configJson);
+		string token1 = data.token1;
+		string token2 = data.token2;
+		string token3 = data.token3;
+		ulong alertGuild = data.alertGuild;
+		ulong alertChannel = data.alertChannel;
+		ulong altGuild = data.altGuild;
+		ulong altChannel = data.altChannel;
 
-		public void Start()
+		public void bot1()
 		{
-			string currentDir = Directory.GetCurrentDirectory();
-			string configJson = File.ReadAllText(currentDir + "/config.json");
-			dynamic data = JObject.Parse(configJson);
-			string token = data.token;
-			ulong alertGuild = data.alertGuild;
-			ulong alertChannel = data.alertChannel;
+			DiscordClient _client = new DiscordClient();
 
-			_client = new DiscordClient();
-
-			_client.Log.Message += (s, e) => Console.WriteLine($"[{e.Severity}] {e.Source}: {e.Message}");
+			_client.Config.LogLevel == LogSeverity.Error;
+			_client.Log.Message += (s, e) => Console.WriteLine($"[1] [{e.Severity}] {e.Source}: {e.Message}");
 
 			_client.MessageReceived += async (s, e) =>
 			{
@@ -33,22 +38,102 @@ namespace dmcatcher
 				{
 					var mutualServers = new List<KeyValuePair<string, ulong>>();
 					var servers = _client.Servers;
+					bool inAlt = false;
 
 					foreach(Server server in servers)
 						foreach (User user in server.Users)
 							if (user.Id == e.User.Id)
+							{
 								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+							}
 
 					string mutuals = string.Join(", ", mutualServers.ToArray());
 					await _client.GetServer(alertGuild).GetChannel(alertChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+					if (inAlt)
+						await _client.GetServer(altGuild).GetChannel(altChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
 				}
 			};
 				
 			_client.ExecuteAndWait(async () => {
-				await _client.Connect(token, TokenType.User);
-				Console.WriteLine($"Connected as {_client.CurrentUser.Name}#{_client.CurrentUser.Discriminator}");
+				await _client.Connect(token1, TokenType.User);
+				Console.WriteLine($"[1] Connected as {_client.CurrentUser.Name}#{_client.CurrentUser.Discriminator}");
 			});
+		}
 
+		public void bot2()
+		{
+			DiscordClient _client = new DiscordClient();
+
+			_client.Config.LogLevel == LogSeverity.Error;
+			_client.Log.Message += (s, e) => Console.WriteLine($"[2] [{e.Severity}] {e.Source}: {e.Message}");
+
+			_client.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = _client.Servers;
+					bool inAlt = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					await _client.GetServer(alertGuild).GetChannel(alertChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+					if (inAlt)
+						await _client.GetServer(altGuild).GetChannel(altChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+				}
+			};
+
+			_client.ExecuteAndWait(async () => {
+				await _client.Connect(token2, TokenType.User);
+				Console.WriteLine($"[2] Connected as {_client.CurrentUser.Name}#{_client.CurrentUser.Discriminator}");
+			});
+		}
+
+		public void bot3()
+		{
+			DiscordClient _client = new DiscordClient();
+
+			_client.Config.LogLevel == LogSeverity.Error;
+			_client.Log.Message += (s, e) => Console.WriteLine($"[3] [{e.Severity}] {e.Source}: {e.Message}");
+
+			_client.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = _client.Servers;
+					bool inAlt = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					await _client.GetServer(alertGuild).GetChannel(alertChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+					if (inAlt)
+						await _client.GetServer(altGuild).GetChannel(altChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+				}
+			};
+
+			_client.ExecuteAndWait(async () => {
+				await _client.Connect(token3, TokenType.User);
+				Console.WriteLine($"[3] Connected as {_client.CurrentUser.Name}#{_client.CurrentUser.Discriminator}");
+			});
 		}
 	}
 
