@@ -14,22 +14,21 @@ namespace dmcatcher
 		static void Alt(string[] args) => new dmcatcher().bot2();
 		static void Alt2(string[] args) => new dmcatcher().bot3();
 
-		string currentDir = Directory.GetCurrentDirectory();
-		string configJson = File.ReadAllText(currentDir + "/config.json");
-		dynamic data = JObject.Parse(configJson);
-		string token1 = data.token1;
-		string token2 = data.token2;
-		string token3 = data.token3;
-		ulong alertGuild = data.alertGuild;
-		ulong alertChannel = data.alertChannel;
-		ulong altGuild = data.altGuild;
-		ulong altChannel = data.altChannel;
+		public static string currentDir = Directory.GetCurrentDirectory();
+		public static string configJson = File.ReadAllText(currentDir + "/config.json");
+		public static dynamic data = JObject.Parse(configJson);
+		public static string token1 = data.token1;
+		public static string token2 = data.token2;
+		public static string token3 = data.token3;
+		public static ulong alertGuild = data.alertGuild;
+		public static ulong alertChannel = data.alertChannel;
+		public static ulong altGuild = data.altGuild;
+		public static ulong altChannel = data.altChannel;
 
 		public void bot1()
 		{
 			DiscordClient _client = new DiscordClient();
 
-			_client.Config.LogLevel == LogSeverity.Error;
 			_client.Log.Message += (s, e) => Console.WriteLine($"[1] [{e.Severity}] {e.Source}: {e.Message}");
 
 			_client.MessageReceived += async (s, e) =>
@@ -66,7 +65,6 @@ namespace dmcatcher
 		{
 			DiscordClient _client = new DiscordClient();
 
-			_client.Config.LogLevel == LogSeverity.Error;
 			_client.Log.Message += (s, e) => Console.WriteLine($"[2] [{e.Severity}] {e.Source}: {e.Message}");
 
 			_client.MessageReceived += async (s, e) =>
@@ -103,7 +101,6 @@ namespace dmcatcher
 		{
 			DiscordClient _client = new DiscordClient();
 
-			_client.Config.LogLevel == LogSeverity.Error;
 			_client.Log.Message += (s, e) => Console.WriteLine($"[3] [{e.Severity}] {e.Source}: {e.Message}");
 
 			_client.MessageReceived += async (s, e) =>
