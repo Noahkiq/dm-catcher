@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.CSharp;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace dmcatcher
 {
@@ -29,9 +30,9 @@ namespace dmcatcher
 			DiscordClient bot2 = new DiscordClient();
 			DiscordClient bot3 = new DiscordClient();
 
-			bot1.Log.Message += (s, e) => Console.WriteLine($"[1] [{e.Severity}] {e.Source}: {e.Message}");
-			bot2.Log.Message += (s, e) => Console.WriteLine($"[2] [{e.Severity}] {e.Source}: {e.Message}");
-			bot3.Log.Message += (s, e) => Console.WriteLine($"[3] [{e.Severity}] {e.Source}: {e.Message}");
+//			bot1.Log.Message += (s, e) => Console.WriteLine($"[1] [{e.Severity}] {e.Source}: {e.Message}");
+//			bot2.Log.Message += (s, e) => Console.WriteLine($"[2] [{e.Severity}] {e.Source}: {e.Message}");
+//			bot3.Log.Message += (s, e) => Console.WriteLine($"[3] [{e.Severity}] {e.Source}: {e.Message}");
 
 			bot1.MessageReceived += async (s, e) =>
 			{
@@ -111,6 +112,7 @@ namespace dmcatcher
 
 			bot3.ExecuteAndWait(async () => {
 				await bot3.Connect(token3, TokenType.User);
+				System.Threading.Thread.Sleep(1000);
 				Console.WriteLine($"[1] Connected as {bot1.CurrentUser.Name}#{bot1.CurrentUser.Discriminator}");
 				Console.WriteLine($"[2] Connected as {bot2.CurrentUser.Name}#{bot2.CurrentUser.Discriminator}");
 				Console.WriteLine($"[3] Connected as {bot3.CurrentUser.Name}#{bot3.CurrentUser.Discriminator}");
