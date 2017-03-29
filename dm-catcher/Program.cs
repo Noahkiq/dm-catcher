@@ -11,7 +11,7 @@ namespace dmcatcher
 {
 	class dmcatcher
 	{
-		static void Main(string[] args) => new dmcatcher().bots();
+		static void Main(string[] args) => new dmcatcher().startbots();
 
 		public static string currentDir = Directory.GetCurrentDirectory();
 		public static string configJson = File.ReadAllText(currentDir + "/config.json");
@@ -19,28 +19,43 @@ namespace dmcatcher
 		public static string token1 = data.token1;
 		public static string token2 = data.token2;
 		public static string token3 = data.token3;
+		public static string token4 = data.token4;
+		public static string token5 = data.token5;
+		public static string token6 = data.token6;
+		public static string token7 = data.token7;
+		public static string token8 = data.token8;
 		public static ulong alertGuild = data.alertGuild;
 		public static ulong alertChannel = data.alertChannel;
 		public static ulong altGuild = data.altGuild;
 		public static ulong altChannel = data.altChannel;
+		public static ulong customGuild = 282219466589208576;
+		public static ulong customChannel = 282477076454309888;
 
-		public void bots()
+		public void startbots()
 		{
-			DiscordClient bot1 = new DiscordClient();
-			DiscordClient bot2 = new DiscordClient();
-			DiscordClient bot3 = new DiscordClient();
+			bot1();
+			bot2();
+			bot3();
+			bot4();
+			bot5();
+			bot6();
+			bot7();
+			bot8();
+		}
+		public void bot1()
+		{
+			DiscordClient bot = new DiscordClient();
 
-//			bot1.Log.Message += (s, e) => Console.WriteLine($"[1] [{e.Severity}] {e.Source}: {e.Message}");
-//			bot2.Log.Message += (s, e) => Console.WriteLine($"[2] [{e.Severity}] {e.Source}: {e.Message}");
-//			bot3.Log.Message += (s, e) => Console.WriteLine($"[3] [{e.Severity}] {e.Source}: {e.Message}");
+			bot.Log.Message += (s, e) => Console.WriteLine($"[1 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
 
-			bot1.MessageReceived += async (s, e) =>
+			bot.MessageReceived += async (s, e) =>
 			{
 				if (e.Channel.IsPrivate)
 				{
 					var mutualServers = new List<KeyValuePair<string, ulong>>();
-					var servers = bot1.Servers;
+					var servers = bot.Servers;
 					bool inAlt = false;
+					bool inCustom = false;
 
 					foreach(Server server in servers)
 						foreach (User user in server.Users)
@@ -49,22 +64,44 @@ namespace dmcatcher
 								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
 								if (server.Id == altGuild)
 									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
 							}
 
 					string mutuals = string.Join(", ", mutualServers.ToArray());
-					await bot1.GetServer(alertGuild).GetChannel(alertChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
 					if (inAlt)
-						await bot1.GetServer(altGuild).GetChannel(altChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
 				}
 			};
 
-			bot2.MessageReceived += async (s, e) =>
+			bot.Connect(token1, TokenType.User);
+		}
+
+		public void bot2()
+		{
+			DiscordClient bot = new DiscordClient();
+
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[2 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
+
+			bot.MessageReceived += async (s, e) =>
 			{
 				if (e.Channel.IsPrivate)
 				{
 					var mutualServers = new List<KeyValuePair<string, ulong>>();
-					var servers = bot2.Servers;
+					var servers = bot.Servers;
 					bool inAlt = false;
+					bool inCustom = false;
 
 					foreach(Server server in servers)
 						foreach (User user in server.Users)
@@ -73,22 +110,43 @@ namespace dmcatcher
 								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
 								if (server.Id == altGuild)
 									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
 							}
 
 					string mutuals = string.Join(", ", mutualServers.ToArray());
-					await bot2.GetServer(alertGuild).GetChannel(alertChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
 					if (inAlt)
-						await bot2.GetServer(altGuild).GetChannel(altChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
 				}
 			};
 
-			bot3.MessageReceived += async (s, e) =>
+			bot.Connect(token2, TokenType.User);
+		}
+		public void bot3()
+		{
+			DiscordClient bot = new DiscordClient();
+
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[3 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
+
+			bot.MessageReceived += async (s, e) =>
 			{
 				if (e.Channel.IsPrivate)
 				{
 					var mutualServers = new List<KeyValuePair<string, ulong>>();
-					var servers = bot3.Servers;
+					var servers = bot.Servers;
 					bool inAlt = false;
+					bool inCustom = false;
 
 					foreach(Server server in servers)
 						foreach (User user in server.Users)
@@ -97,25 +155,255 @@ namespace dmcatcher
 								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
 								if (server.Id == altGuild)
 									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
 							}
 
 					string mutuals = string.Join(", ", mutualServers.ToArray());
-					await bot3.GetServer(alertGuild).GetChannel(alertChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
 					if (inAlt)
-						await bot3.GetServer(altGuild).GetChannel(altChannel).SendMessage($"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text);
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
 				}
 			};
 
-			bot1.Connect(token1, TokenType.User);
+			bot.Connect(token3, TokenType.User);
+		}
+		public void bot4()
+		{
+			DiscordClient bot = new DiscordClient();
 
-			bot2.Connect(token2, TokenType.User);
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[4 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
 
-			bot3.ExecuteAndWait(async () => {
-				await bot3.Connect(token3, TokenType.User);
-				System.Threading.Thread.Sleep(1000);
-				Console.WriteLine($"[1] Connected as {bot1.CurrentUser.Name}#{bot1.CurrentUser.Discriminator}");
-				Console.WriteLine($"[2] Connected as {bot2.CurrentUser.Name}#{bot2.CurrentUser.Discriminator}");
-				Console.WriteLine($"[3] Connected as {bot3.CurrentUser.Name}#{bot3.CurrentUser.Discriminator}");
+			bot.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = bot.Servers;
+					bool inAlt = false;
+					bool inCustom = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
+					if (inAlt)
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
+				}
+			};
+
+			bot.Connect(token4, TokenType.User);
+		}
+		public void bot5()
+		{
+			DiscordClient bot = new DiscordClient();
+
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[2 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
+
+			bot.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = bot.Servers;
+					bool inAlt = false;
+					bool inCustom = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
+					if (inAlt)
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
+				}
+			};
+
+			bot.Connect(token5, TokenType.User);
+		}
+		public void bot6()
+		{
+			DiscordClient bot = new DiscordClient();
+
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[2 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
+
+			bot.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = bot.Servers;
+					bool inAlt = false;
+					bool inCustom = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
+					if (inAlt)
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
+				}
+			};
+
+			bot.Connect(token6, TokenType.User);
+		}
+		public void bot7()
+		{
+			DiscordClient bot = new DiscordClient();
+
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[2 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
+
+			bot.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = bot.Servers;
+					bool inAlt = false;
+					bool inCustom = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
+					if (inAlt)
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
+				}
+			};
+
+			bot.Connect(token7, TokenType.User);
+		}
+		public void bot8()
+		{
+			DiscordClient bot = new DiscordClient();
+
+			// bot.Log.Message += (s, e) => Console.WriteLine($"[2 - {e.Severity} - {DateTime.UtcNow.Hour}:{DateTime.UtcNow.Minute}:{DateTime.UtcNow.Second}] {e.Source}: {e.Message}");
+
+			bot.MessageReceived += async (s, e) =>
+			{
+				if (e.Channel.IsPrivate)
+				{
+					var mutualServers = new List<KeyValuePair<string, ulong>>();
+					var servers = bot.Servers;
+					bool inAlt = false;
+					bool inCustom = false;
+
+					foreach(Server server in servers)
+						foreach (User user in server.Users)
+							if (user.Id == e.User.Id)
+							{
+								mutualServers.Add(new KeyValuePair<string, ulong>(server.Name, server.Id));
+								if (server.Id == altGuild)
+									inAlt = true;
+								else if (server.Id == customGuild)
+									inCustom = true;
+							}
+
+					string mutuals = string.Join(", ", mutualServers.ToArray());
+					bool hasAttachment = e.Message.Attachments.Length > 0;
+					string output = $"PM from (Id {e.User.Id})\n({e.User.Mention}) {e.User.Name} [#{e.User.Discriminator}]\nMutual servers: {mutuals}\n**Message:**\n" + e.Message.Text;
+					if(hasAttachment) {
+						output += "\n**Attachment(s):** ";
+						foreach (var attatchment in e.Message.Attachments)
+							output += attatchment.Url;
+					}
+
+					await bot.GetServer(alertGuild).GetChannel(alertChannel).SendMessage(output);
+					if (inAlt)
+						await bot.GetServer(altGuild).GetChannel(altChannel).SendMessage(output);
+					if (inCustom)
+						await bot.GetServer(customGuild).GetChannel(customChannel).SendMessage(output);
+				}
+			};
+
+			bot.ExecuteAndWait(async () => {
+				await bot.Connect(token8, TokenType.User);
+				Console.WriteLine($"[8] Connected as {bot.CurrentUser.Name}#{bot.CurrentUser.Discriminator}");
 			});
 		}
 	}
